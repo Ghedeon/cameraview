@@ -13,6 +13,13 @@
 // limitations under the License.
 
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+
+Properties props = new Properties()
+props.load(file("version.properties").newDataInputStream())
+props.each { prop ->
+    project.ext.set(prop.key, prop.value)
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -48,5 +55,31 @@ dependencies {
     }
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
         exclude module: 'support-annotations'
+    }
+}
+
+version = project.property('VERSION_NAME')
+archivesBaseName = project.property('ARTIFACT_NAME')
+
+bintray {
+    user = project.hasProperty('BINTRAY_USER') ? project.property('BINTRAY_USER') : ''
+    key = project.hasProperty('BINTRAY_KEY') ? project.property('BINTRAY_KEY') : ''
+    configurations = ['archives']
+    dryRun = true
+    publish = false
+    override = true
+    pkg {
+        repo = 'gradle'
+        name = 'cameraview'
+        group = 'com.ghedeon'
+        desc = 'Google CamerView'
+        userOrg = 'ghedeon'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/Ghedeon/cameraview.git'
+        publicDownloadNumbers = true
+        version {
+            name = project.property('VERSION_NAME')
+            released = new Date()
+        }
     }
 }
