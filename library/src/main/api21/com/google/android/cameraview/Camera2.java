@@ -681,6 +681,9 @@ class Camera2 extends CameraViewImpl {
                             setState(STATE_LOCKED);
                             onPrecaptureRequired();
                         }
+                    } else {
+                        setState(STATE_CAPTURING);
+                        onReady();
                     }
                     break;
                 }
